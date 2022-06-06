@@ -1,7 +1,7 @@
 const express = require("express");
 const { Client } = require("whatsapp-web.js");
 const client = new Client();
-const port = process.env.PORT || 8888;
+const port = process.env.PORT || 8000;
 const socket = require("socket.io");
 const http = require("http");
 const app = express();
