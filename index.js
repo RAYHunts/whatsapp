@@ -1,6 +1,5 @@
 const express = require("express");
-const { Client } = require("whatsapp-web.js");
-const client = new Client();
+const { Client, LocalAuth } = require("whatsapp-web.js");
 const port = process.env.PORT || 8000;
 const socket = require("socket.io");
 const http = require("http");
@@ -8,6 +7,21 @@ const app = express();
 const server = http.createServer(app);
 const io = socket(server);
 const qrcode = require("qrcode");
+const client = new Client({
+  puppeteer: {
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process', // <- this one doesn't works in Windows
+      '--disable-gpu'
+    ],
+  },
+}
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
