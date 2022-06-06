@@ -28,6 +28,9 @@
         socket.on("qr", (msg) => {
           $("img").attr("src", msg);
         });
+        socket.on("clientReady", () => {
+          $("img").hide();
+        });
       });
     </script>
   </body>

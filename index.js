@@ -21,6 +21,7 @@ const client = new Client({
       "--disable-gpu",
     ],
   },
+  authStrategy: new LocalAuth(),
 });
 
 app.get("/", (req, res) => {
@@ -40,8 +41,26 @@ io.on("connection", (socket) => {
   });
   client.on("ready", () => {
     socket.emit("message", "Client ready");
+    socket.emit("clientReady", true);
   });
 });
+
+// app.post("/send-message", [
+//   body('number').not().isEmpty().withMessage('Number is required'),
+//   body('message').not().isEmpty().withMessage('Message is required'),
+// ], async (req, res) => {
+//   const errors = validationResult(req).formatWith(({ msg }) => msg);
+//   if (!errors.isEmpty()) {
+//     return res.status(422).json({ errors: errors.array() });
+//   }
+//   const { number, message } = req.body;
+//   const localAuth = new LocalAuth(client);
+//   const session = await localAuth.login();
+//   const contact = await client.getContactById(number);
+//   const messageId = await client.sendMessage(contact, message);
+//   res.json({ messageId });
+
+// });
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}\nhttp://localhost:${port}`);
