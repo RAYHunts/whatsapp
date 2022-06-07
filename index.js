@@ -8,6 +8,7 @@ const server = http.createServer(app);
 const io = socket(server);
 const qrcode = require("qrcode");
 const client = new Client({
+  restartOnAuthFail: true,
   puppeteer: {
     headless: true,
     args: [
@@ -42,6 +43,20 @@ io.on("connection", (socket) => {
   client.on("ready", () => {
     socket.emit("message", "Client ready");
     socket.emit("clientReady", true);
+  });
+
+  client.on("authenticated", () => {
+    socket.emit("message", "Client authenticated");
+  });
+
+  client.on("auth_failure", (err) => {
+    socket.emit("message", "Client authentication failed");
+  });
+
+  client.on("disconnected", () => {
+    socket.emit("message", "Client disconnected");
+    client.destroy();
+    client.initialize();
   });
 });
 
